@@ -9,8 +9,7 @@
 
 #define LOG(x) std::cout << x << std::endl
 
-bool running = true;
-
+bool running=true;
 void swap(int *a, int i, int j)
 {
 	int temp = a[i];
@@ -37,7 +36,7 @@ void renderBars(Bar *bars[], int barsCount, sf::RenderWindow &window)
 	window.clear(sf::Color(120, 125, 135));
 	for (int i = 0; i < barsCount; ++i)
 	{
-		window.draw(sf::RectangleShape(*(bars[i]->getRect())));
+		window.draw(sf::RectangleShape(*(bars[i]->getRect())));	
 	}
 	window.display();
 }
@@ -132,7 +131,7 @@ int quickSortPartition(int *a, int lowI, int highI)
 		}
 	}
 	swap(a, i + 1, highI);
-	usleep(10000);
+	usleep(1000);
 	return i + 1;
 }
 
@@ -159,7 +158,7 @@ void insertionSort(int *arr, int numCount)
 			if(!running)
 				return;
 			swap(arr, j, j - 1);
-			usleep(5000);
+			usleep(500);
 		}
 	}
 }
@@ -167,24 +166,36 @@ void insertionSort(int *arr, int numCount)
 void bubbleSort(int *arr, int numCount)
 {
 	bool swapped;
-	do
-	{
+	do{
 		swapped = false;
-		for (int i = 1; i < numCount; ++i)
+		for (int i=1;i<numCount;++i)
 		{
-			if(!running)
+			if(!running){
 				return;
-			if (arr[i - 1] > arr[i])
+			}
+			if (arr[i-1]>arr[i])
 			{
-				swap(arr, i, i - 1);
+				swap(arr,i,i-1);
 				//swapped = true;
-				usleep(5000);
 			}
 		}
-
+		std::this_thread::sleep_for(std::chrono::microseconds(1000));
 	} while (!swapped);
+
 }
 
+void normalSort(int *arr, int numCount){
+	int i,j;
+	for(i=0;i<numCount;i++){
+		for(j=0;j<numCount;j++){
+			if(arr[j]>arr[i]){
+				//swap valori
+				swap(arr,i,j);
+				usleep(1000);
+			}
+		}
+	}
+}
 void updateBars(Bar *bars[], int *numbers, int numCount)
 {
 	for (int i = 0; i < numCount; ++i)
@@ -229,6 +240,8 @@ int main()
 	//std::thread sort(&mergeSort, numbers, 0, numCount - 1);
 	//std::thread sort(&insertionSort, numbers, numCount);
 	std::thread sort(&bubbleSort, numbers, numCount);
+	//std::thread sort(&normalSort, numbers, numCount);
+
 
 	sf::Event event;
 
